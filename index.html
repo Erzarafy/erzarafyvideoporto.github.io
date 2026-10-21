@@ -20,12 +20,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>document.documentElement.classList.add("js");</script>
   <link rel="stylesheet" href="style.css">
   <script src="script.js" defer></script>
   <title>Video Portfolio — Erza Al-Isyrafy</title>
 </head>
 <body>
   <a class="skip-link" href="#konten">Lewati ke konten</a>
+  <div class="scroll-progress" aria-hidden="true"></div>
   <header class="site-header">
     <a class="wordmark" href="#atas" aria-label="Erza Video, kembali ke atas">erza<span>.</span><span class="wordmark-divider">/</span>video</a>
     <nav class="main-nav" aria-label="Navigasi utama">
@@ -51,17 +53,21 @@
   <main id="konten">
     <section class="hero" id="atas" aria-labelledby="heroTitle">
       <div class="hero-copy">
-        <p class="eyebrow"><span class="availability-dot"></span><span data-i18n="heroEyebrow">VIDEO EDITOR</span> <span class="eyebrow-dot">/</span> <span data-i18n="heroLocation">SURAKARTA, INDONESIA</span></p>
-        <h1 id="heroTitle"><span data-i18n="heroLine1">Bukan cuma</span><br><span data-i18n="heroLine2">ditonton</span><span class="hero-period">.</span><br><span class="hero-accent" data-i18n="heroLine3">Dirasakan.</span></h1>
-        <p class="hero-lead" data-i18n="heroLead">Setiap potongan punya tujuan. Saya merangkai visual, ritme, dan cerita untuk membuat video yang terasa hidup — dan tinggal lebih lama di ingatan.</p>
-        <div class="hero-actions">
+        <p class="eyebrow" data-reveal="hero" style="--i:4"><span class="availability-dot"></span><span data-i18n="heroEyebrow">VIDEO EDITOR</span> <span class="eyebrow-dot">/</span> <span data-i18n="heroLocation">SURAKARTA, INDONESIA</span></p>
+        <h1 id="heroTitle" class="hero-title">
+          <span class="hero-title-line"><span data-i18n="heroLine1">Bukan cuma</span></span>
+          <span class="hero-title-line"><span><span data-i18n="heroLine2">ditonton</span><span class="hero-period">.</span></span></span>
+          <span class="hero-title-line"><span class="hero-accent" data-i18n="heroLine3">Dirasakan.</span></span>
+        </h1>
+        <p class="hero-lead" data-i18n="heroLead" data-reveal="hero" style="--i:5">Setiap potongan punya tujuan. Saya merangkai visual, ritme, dan cerita untuk membuat video yang terasa hidup — dan tinggal lebih lama di ingatan.</p>
+        <div class="hero-actions" data-reveal="hero" style="--i:6">
           <a class="button button-primary" href="#karya"><span data-i18n="heroButtonText">Jelajahi pilihan karya</span> <span aria-hidden="true">↘</span></a>
-          <span class="hero-note"><span data-i18n="heroNote1">100+ kolaborasi video</span><br><span data-i18n="heroNote2">dan terus bertumbuh.</span></span>
+          <span class="hero-note"><span data-i18n="heroNote1"><span class="stat-count" data-count-up aria-label="100">100</span>+ kolaborasi video</span><br><span data-i18n="heroNote2">dan terus bertumbuh.</span></span>
         </div>
-        <div class="hero-meta"><span data-i18n="heroMeta1">SHORT-FORM</span><span data-i18n="heroMeta2">STORYTELLING</span><span data-i18n="heroMeta3">VIDEO EDITING</span></div>
+        <div class="hero-meta" data-reveal="hero" style="--i:7"><span data-i18n="heroMeta1">SHORT-FORM</span><span data-i18n="heroMeta2">STORYTELLING</span><span data-i18n="heroMeta3">VIDEO EDITING</span></div>
       </div>
 
-      <a class="showreel-card" href="#karya" aria-label="Jelajahi pilihan karya video">
+      <a class="showreel-card" href="#karya" aria-label="Jelajahi pilihan karya video" data-reveal="hero" style="--i:4">
         <div class="showreel-art" aria-hidden="true">
           <span class="reel-index">ERZA AL-ISYRAFY <span>—</span> VIDEO EDITOR</span>
           <div class="reel-orbit orbit-a"></div>
@@ -73,22 +79,23 @@
           <span class="reel-timestamp">PLAY YOUR STORY <span>↗</span></span>
           <div class="reel-progress"><span></span></div>
         </div>
-        <div class="showreel-caption"><span>FRAME 001 <span class="caption-divider">/</span> STORY IN MOTION</span><span class="caption-arrow" aria-hidden="true">↗</span></div>
+        <div class="showreel-caption"><span class="caption-label">FRAME <span class="frame-number" data-frame-number>001</span> <span class="caption-divider">/</span> <span class="caption-marquee"><span class="caption-marquee-track"><span>STORY IN MOTION</span><span aria-hidden="true">STORY IN MOTION</span></span></span></span><span class="caption-arrow" aria-hidden="true">↗</span></div>
       </a>
 
-      <a class="scroll-cue" href="#karya"><span data-i18n="scrollCue">SCROLL UNTUK MENONTON</span> <span aria-hidden="true">↓</span></a>
+      <a class="scroll-cue" href="#karya" data-reveal="hero" style="--i:8"><span data-i18n="scrollCue">SCROLL UNTUK MENONTON</span> <span aria-hidden="true">↓</span></a>
       <span class="hero-index" aria-hidden="true">01 — 03</span>
     </section>
 
     <section class="work-section section" id="karya" aria-labelledby="workTitle">
-      <div class="section-topline"><span>01 <i>/</i> <span data-i18n="workLabel">PILIHAN KARYA</span></span><span class="topline-note" data-i18n="workLabelNote">DIPILIH DENGAN CERITA</span></div>
+      <div class="section-topline"><span data-reveal>01 <i>/</i> <span data-i18n="workLabel">PILIHAN KARYA</span></span><span class="topline-note" data-i18n="workLabelNote">DIPILIH DENGAN CERITA</span></div>
       <div class="section-heading">
-        <h2 id="workTitle"><span data-i18n="workHeading1">Setiap frame,</span><br><span data-i18n="workHeading2">punya cerita.</span></h2>
+        <h2 id="workTitle"><span class="heading-mask" data-reveal><span data-i18n="workHeading1">Setiap frame,</span></span><br><span class="heading-mask" data-reveal><span data-i18n="workHeading2">punya cerita.</span></span></h2>
         <p data-i18n="workDesc">Potongan karya dari berbagai cerita, brand, dan momen yang saya bantu hidupkan lewat video.</p>
       </div>
       <div class="filter-bar" aria-label="Filter video">
         <span class="filter-label" data-i18n="filterLabel">LIHAT BERDASARKAN</span>
         <div class="filter-options" role="group" aria-label="Kategori video">
+          <span class="filter-pill" aria-hidden="true"></span>
           <button class="filter-button is-active" type="button" data-filter="all" aria-pressed="true"><span data-i18n="filterAll">Semua</span> <span data-count="all">00</span></button>
           <button class="filter-button" type="button" data-filter="short-form" aria-pressed="false"><span data-i18n="filterShort">Short-form</span> <span data-count="short-form">00</span></button>
           <button class="filter-button" type="button" data-filter="brand" aria-pressed="false"><span data-i18n="filterBrand">Brand story</span> <span data-count="brand">00</span></button>
@@ -108,9 +115,9 @@
     </section>
 
     <section class="manifesto section" id="tentang" aria-labelledby="manifestoTitle">
-      <div class="section-topline"><span>02 <i>/</i> <span data-i18n="aboutLabel">SEDIKIT TENTANG SAYA</span></span><span class="topline-note" data-i18n="aboutNote">BEHIND THE CUT</span></div>
+      <div class="section-topline"><span data-reveal>02 <i>/</i> <span data-i18n="aboutLabel">SEDIKIT TENTANG SAYA</span></span><span class="topline-note" data-i18n="aboutNote">BEHIND THE CUT</span></div>
       <div class="manifesto-layout">
-        <h2 id="manifestoTitle"><span data-i18n="aboutHeading1">Potongannya</span><br><span data-i18n="aboutHeading2">mungkin kecil.</span><br><span data-i18n="aboutHeading3">Rasanya?</span><br><span data-i18n="aboutHeading4">Tidak.</span></h2>
+        <h2 id="manifestoTitle"><span class="heading-mask" data-reveal><span data-i18n="aboutHeading1">Potongannya</span></span><br><span class="heading-mask" data-reveal><span data-i18n="aboutHeading2">mungkin kecil.</span></span><br><span class="heading-mask" data-reveal><span data-i18n="aboutHeading3">Rasanya?</span></span><br><span class="heading-mask" data-reveal><span data-i18n="aboutHeading4">Tidak.</span></span></h2>
         <div class="manifesto-copy">
           <p data-i18n="aboutPara1">Saya Erza — video editor yang percaya kalau edit yang baik bukan soal transisi paling ramai. Ini soal tahu kapan harus bergerak, kapan harus diam, dan bagaimana membuat setiap detik terasa berarti.</p>
           <p data-i18n="aboutPara2">Sudah bekerja bersama lebih dari 100 klien. Selalu terbuka untuk cerita baru, feedback jujur, dan kesempatan berkolaborasi.</p>
@@ -125,10 +132,10 @@
     </section>
 
     <section class="contact-section" id="kontak" aria-labelledby="contactTitle">
-      <div class="contact-topline"><span>03 <i>/</i> <span data-i18n="contactLabel">LANGKAH BERIKUTNYA</span></span><span data-i18n="contactLabelNote">YOUR STORY, NEXT?</span></div>
+      <div class="contact-topline"><span data-reveal>03 <i>/</i> <span data-i18n="contactLabel">LANGKAH BERIKUTNYA</span></span><span data-i18n="contactLabelNote">YOUR STORY, NEXT?</span></div>
       <div class="contact-content">
         <p class="contact-eyebrow"><span></span><span data-i18n="contactEyebrow">SEDANG MENERIMA PROYEK</span></p>
-        <h2 id="contactTitle"><span data-i18n="contactHeading1">Punya cerita?</span><br><span data-i18n="contactHeading2">Ayo kita rangkai.</span></h2>
+        <h2 id="contactTitle"><span class="heading-mask" data-reveal><span data-i18n="contactHeading1">Punya cerita?</span></span><br><span class="heading-mask" data-reveal><span data-i18n="contactHeading2">Ayo kita rangkai.</span></span></h2>
         <a class="contact-button" href="https://erzarafy.github.io/"><span data-i18n="contactButton">Diskusikan proyek</span> <span aria-hidden="true">↗</span></a>
       </div>
       <div class="contact-side"><span data-i18n="contactOpenFor">OPEN FOR</span><p><span data-i18n="contactOpenText">Freelance</span> <i>·</i> <span data-i18n="contactCollab">Kolaborasi</span> <i>·</i> <span data-i18n="contactProject">Proyek baru</span></p><a href="mailto:muhammaderza09@gmail.com">muhammaderza09@gmail.com</a></div>
@@ -141,7 +148,7 @@
     <a class="back-top" href="#atas" aria-label="Kembali ke atas">↑</a>
   </footer>
 
-  <dialog class="video-dialog" id="videoDialog" aria-label="Pemutar video YouTube">
+  <dialog class="video-dialog" id="videoDialog" role="dialog" aria-modal="true" aria-labelledby="dialogTitle" aria-label="Pemutar video YouTube">
     <div class="dialog-top"><span id="dialogTitle">MENONTON KARYA</span><button class="dialog-close" id="closeDialog" type="button" aria-label="Tutup video">TUTUP <span aria-hidden="true">×</span></button></div>
     <div class="dialog-frame" id="dialogFrame"></div>
   </dialog>
