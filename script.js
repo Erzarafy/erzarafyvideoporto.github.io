@@ -498,11 +498,20 @@ async function renderProjects(filter = "all", { animate = false } = {}) {
 }
 
 function moveFilterPill(activeButton) {
+  if (!activeButton) return;
   const options = activeButton.closest(".filter-options");
-  const pill = options.querySelector(".filter-pill");
+  const pill = options ? options.querySelector(".filter-pill") : null;
+  if (!pill) return;
   const width = activeButton.offsetWidth;
-  pill.style.height = `${activeButton.offsetHeight}px`;
-  pill.style.transform = `translate3d(${activeButton.offsetLeft}px, ${activeButton.offsetTop}px, 0) scaleX(${width})`;
+  const height = activeButton.offsetHeight;
+  if (!width || !height) return; /* jangan ukur saat tombol tersembunyi */
+  /* Ukuran di-set langsung (tanpa transisi): tidak lagi via scaleX dari base
+     1px — dulu border ikut ter-scale jadi blok solid & faktor pengali bisa
+     meleset hingga pill menimpa tombol sebelah. Animasi geser tetap murni
+     via transform (translate3d) + opacity sesuai aturan. */
+  pill.style.width = `${width}px`;
+  pill.style.height = `${height}px`;
+  pill.style.transform = `translate3d(${activeButton.offsetLeft}px, ${activeButton.offsetTop}px, 0)`;
   options.classList.add("has-pill");
 }
 
@@ -864,12 +873,19 @@ for (const filter of filterButtons) {
 }
 
 function setupFilterPill() {
-  const activeButton = document.querySelector(".filter-button.is-active");
-  if (activeButton) moveFilterPill(activeButton);
-  window.addEventListener("resize", () => {
+  const positionPill = () => {
     const active = document.querySelector(".filter-button.is-active");
     if (active) moveFilterPill(active);
-  }, { passive: true });
+  };
+  positionPill();
+  /* Ukur ulang setelah font & resource siap: lebar tombol bisa bergeser
+     dari hasil ukur awal (fallback font), yang dulu bikin pill meleset
+     dan menimpa tombol sebelah. */
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(positionPill);
+  }
+  window.addEventListener("load", positionPill);
+  window.addEventListener("resize", positionPill, { passive: true });
 }
 
 document.getElementById("closeDialog").addEventListener("click", closeVideo);
