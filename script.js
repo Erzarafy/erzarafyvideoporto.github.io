@@ -485,6 +485,15 @@ async function renderProjects(filter = "all", { animate = false } = {}) {
   }
   projectGrid.hidden = visibleProjects.length === 0;
   emptyState.hidden = visibleProjects.length !== 0;
+  if (!emptyState.hidden) {
+    /* Fase 4 — mark empty state muncul sekali dengan halus tiap ditampilkan */
+    const mark = emptyState.querySelector(".empty-mark");
+    if (mark) {
+      mark.classList.remove("is-popping");
+      void mark.offsetWidth; /* paksa reflow agar animasi bisa di-restart */
+      mark.classList.add("is-popping");
+    }
+  }
   observeProjectCards();
 }
 
@@ -929,13 +938,30 @@ mobileNav.querySelectorAll("a").forEach((link) => {
   });
 });
 
-document.querySelectorAll(".lang-button").forEach((button) => {
-  button.addEventListener("click", () => {
-    currentLanguage = button.dataset.lang;
+/* Fase 4 — ganti bahasa dengan crossfade: fade out 120ms → swap teks → fade in
+   200ms. min-height dikunci selama swap agar layout tidak melompat. */
+function swapLanguage(nextLanguage) {
+  if (nextLanguage === currentLanguage) return;
+  const main = document.querySelector("main");
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const apply = () => {
+    currentLanguage = nextLanguage;
     applyTranslations(currentLanguage);
     renderProjects(document.querySelector(".filter-button.is-active")?.dataset.filter || "all");
     moveFilterPill(document.querySelector(".filter-button.is-active"));
-  });
+  };
+  if (!main || reducedMotion) { apply(); return; }
+  main.style.minHeight = `${main.offsetHeight}px`;
+  main.classList.add("is-swapping-lang");
+  window.setTimeout(() => {
+    apply();
+    main.classList.remove("is-swapping-lang");
+    window.setTimeout(() => { main.style.minHeight = ""; }, 220);
+  }, 130);
+}
+
+document.querySelectorAll(".lang-button").forEach((button) => {
+  button.addEventListener("click", () => swapLanguage(button.dataset.lang));
 });
 
 applyTranslations();
@@ -949,3 +975,52 @@ startHeroIntro();
 setupScrollMotion();
 setupNavUnderline();
 setupFilterPill();
+
+/* ============================================================
+   FASE 5 — Fancy desktop: spotlight kartu + tilt showreel (oleh Budi)
+   Hanya aktif di layar >= 851px dengan pointer halus, dan
+   nonaktif saat prefers-reduced-motion.
+   ============================================================ */
+(function () {
+  var fancyOK = window.matchMedia("(min-width: 851px)").matches
+    && window.matchMedia("(pointer: fine)").matches
+    && !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!fancyOK) return;
+
+  /* Spotlight mengikuti mouse di kartu video.
+     Delegation di grid: tetap jalan walau kartu di-render ulang saat filter. */
+  var grid = document.getElementById("projectGrid");
+  var spotRaf = null;
+  function paintSpotlight(event) {
+    var card = event.target.closest(".project-card");
+    if (!card || !grid.contains(card)) return;
+    var rect = card.getBoundingClientRect();
+    card.style.setProperty("--mx", (event.clientX - rect.left).toFixed(1) + "px");
+    card.style.setProperty("--my", (event.clientY - rect.top).toFixed(1) + "px");
+  }
+  if (grid) {
+    grid.addEventListener("mousemove", function (event) {
+      if (spotRaf) return;
+      spotRaf = requestAnimationFrame(function () { paintSpotlight(event); spotRaf = null; });
+    });
+    grid.addEventListener("mouseleave", function () { spotRaf = null; });
+  }
+
+  /* Tilt halus pada kartu showreel hero (menggantikan hover CSS saat aktif) */
+  var reel = document.querySelector(".showreel-card");
+  if (reel) {
+    var tiltRaf = null;
+    reel.addEventListener("mousemove", function (event) {
+      if (tiltRaf) return;
+      tiltRaf = requestAnimationFrame(function () {
+        var rect = reel.getBoundingClientRect();
+        var rx = ((event.clientY - rect.top) / rect.height - 0.5) * -7;
+        var ry = ((event.clientX - rect.left) / rect.width - 0.5) * 9;
+        reel.style.transform =
+          "perspective(1100px) rotateX(" + rx.toFixed(2) + "deg) rotateY(" + ry.toFixed(2) + "deg) translateY(-4px)";
+        tiltRaf = null;
+      });
+    });
+    reel.addEventListener("mouseleave", function () { reel.style.transform = ""; tiltRaf = null; });
+  }
+})();

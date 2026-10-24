@@ -149,7 +149,7 @@ main { max-width: var(--max); margin: 0 auto; padding: 0 32px; }
 .showreel-card:hover .caption-arrow { transform: translate(2px, -2px); }
 .scroll-cue { position: absolute; bottom: 29px; left: 0; display: flex; gap: 13px; color: var(--muted); text-decoration: none; }
 .scroll-cue span { color: var(--accent); font-size: .9rem; }
-.hero-in-view .scroll-cue > span:last-child { animation: cue-drift 1.8s var(--ease-in-out) infinite; }
+.hero-in-view .scroll-cue > span:last-child { animation: cue-drift 1.8s var(--ease-in-out) 3; }
 .hero-index { position: absolute; right: 0; bottom: 29px; color: rgba(243, 242, 235, .4); }
 
 .section { padding: 105px 0; border-top: 1px solid var(--line); }
@@ -294,7 +294,7 @@ main { max-width: var(--max); margin: 0 auto; padding: 0 32px; }
 @keyframes thumbnail-shimmer { to { transform: translateX(100%); } }
 @keyframes dialog-backdrop-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes dialog-backdrop-out { from { opacity: 1; } to { opacity: 0; } }
-@keyframes card-enter { from { opacity: 0; transform: translateY(10px) scale(.99); } to { opacity: 1; transform: translateY(0) scale(1); } }
+/* card-enter dihapus: tidak terpakai (card enter memakai WAAPI di renderProjects) */
 @media (max-width: 850px) {
   .site-header { padding: 0 23px; }
   main { padding: 0 24px; }
@@ -383,4 +383,158 @@ main { max-width: var(--max); margin: 0 auto; padding: 0 32px; }
   .project-thumb:hover img { transform: none; }
   .project-thumb:hover .project-play { transform: translate(-50%, -50%); }
   .video-dialog[open], .video-dialog.is-animating-in, .video-dialog.is-open, .video-dialog.is-animating-out { transform: none; }
+}
+
+/* ============================================================
+   FASE 4 — Tentang, CTA, polish (oleh Budi)
+   Semua di bawah ini hanya memakai transform & opacity.
+   ============================================================ */
+
+/* --- 3 prinsip: baris bergeser, panah diagonal, underline menggambar ---
+   Reveal stagger lewat data-reveal + --i di HTML. Aturan hover dibuat
+   lebih spesifik agar menang dari .is-revealed, dan delay di-nol-kan. */
+.process-list > div { transition: transform var(--dur-base) var(--ease-out); }
+.process-list > div:hover { transform: translateX(6px); }
+.js .process-list > div[data-reveal].is-revealed:hover { transform: translateX(6px); transition-delay: 0ms; }
+.process-list > div > span:last-child { display: inline-block; transition: transform var(--dur-base) var(--ease-out); }
+.js .process-list > div[data-reveal].is-revealed:hover > span:last-child,
+.process-list > div:hover > span:last-child { transform: translate(3px, -3px); }
+.process-list > div > span:nth-child(2) { position: relative; }
+.process-list > div > span:nth-child(2)::after {
+  content: ""; position: absolute; left: 0; bottom: -4px; width: 100%; height: 1px;
+  background: var(--accent); transform: scaleX(0); transform-origin: left center;
+  transition: transform var(--dur-base) var(--ease-out);
+}
+.process-list > div:hover > span:nth-child(2)::after { transform: scaleX(1); }
+
+/* --- Status proyek: ping ring 2 detik (animasi infinite ke-2 & terakhir) --- */
+.contact-eyebrow > span { position: relative; }
+.contact-eyebrow > span::after {
+  content: ""; position: absolute; inset: -5px; border: 1px solid var(--accent); border-radius: 50%;
+  opacity: 0; transform: scale(.55); pointer-events: none;
+  animation: ping-ring 2s var(--ease-out) infinite;
+}
+@keyframes ping-ring {
+  0% { opacity: .65; transform: scale(.55); }
+  70%, 100% { opacity: 0; transform: scale(1.5); }
+}
+
+/* --- Tombol CTA: fill dari bawah + panah bergeser + active menyusut --- */
+.contact-button { position: relative; overflow: hidden; }
+.contact-button::before {
+  content: ""; position: absolute; inset: 0; background: #dcff83;
+  transform: scaleY(0); transform-origin: bottom center;
+  transition: transform var(--dur-base) var(--ease-out); pointer-events: none;
+}
+.contact-button:hover::before { transform: scaleY(1); }
+.contact-button > span { position: relative; z-index: 1; }
+.contact-button:hover { transform: translateY(-2px); background: var(--accent); }
+.contact-button > span:last-child { display: inline-block; transition: transform var(--dur-base) var(--ease-out); }
+.contact-button:hover > span:last-child { transform: translate(3px, -3px); }
+.contact-button:active { transform: scale(.98); }
+
+/* --- Email: underline menggambar saat hover/fokus --- */
+.contact-side > a { position: relative; display: inline-block; }
+.contact-side > a::after {
+  content: ""; position: absolute; left: 0; bottom: -3px; width: 100%; height: 1px;
+  background: var(--accent); transform: scaleX(0); transform-origin: left center;
+  transition: transform var(--dur-base) var(--ease-out);
+}
+.contact-side > a:hover::after, .contact-side > a:focus-visible::after { transform: scaleX(1); }
+
+/* --- Language switcher: crossfade 120ms keluar / 200ms masuk (JS mengunci min-height) --- */
+main { transition: opacity 200ms ease; }
+main.is-swapping-lang { opacity: 0; transition-duration: 120ms; }
+
+/* --- Empty state: mark muncul sekali dengan halus tiap ditampilkan (JS me-restart) --- */
+.js .empty-mark.is-popping { animation: empty-mark-in 600ms var(--ease-out) 1; }
+@keyframes empty-mark-in { from { opacity: 0; transform: scale(.92); } to { opacity: 1; transform: scale(1); } }
+
+/* --- Fallback tanpa JS: daftar tautan video (tanpa animasi) --- */
+.noscript-videos { margin-top: 23px; padding: 24px; border: 1px solid var(--line); background: var(--surface); }
+.noscript-videos p { margin: 0; color: var(--muted); font-size: .8rem; }
+.noscript-videos ul { margin: 12px 0 0; padding-left: 18px; }
+.noscript-videos li { margin: 6px 0; }
+.noscript-videos a { color: var(--accent); font-size: .85rem; }
+
+/* ============================================================
+   FASE 5 — Fancy desktop (oleh Budi)
+   Hanya untuk layar >= 851px. Semua keyframes tetap memakai
+   transform & opacity agar 60fps. Efek yang butuh mouse dijaga
+   JS dengan matchMedia('(pointer: fine)').
+   ============================================================ */
+@media (min-width: 851px) {
+
+  /* --- Film grain sinematik di seluruh halaman --- */
+  body::after {
+    content: ""; position: fixed; inset: -5%; z-index: 60; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: .05;
+    animation: grain-flicker 1.1s steps(3) infinite;
+  }
+  @keyframes grain-flicker {
+    0% { opacity: .04; transform: translate(0, 0); }
+    33% { opacity: .065; transform: translate(-1.5%, 1%); }
+    66% { opacity: .045; transform: translate(1%, -1.5%); }
+    100% { opacity: .04; transform: translate(0, 0); }
+  }
+
+  /* --- Aura hero melayang pelan --- */
+  .hero::before { animation: aura-drift 18s ease-in-out infinite; }
+  @keyframes aura-drift {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(7%, 12%) scale(1.18); }
+  }
+
+  /* --- Orbit showreel berputar lambat, berlawanan arah --- */
+  .reel-orbit.orbit-a { animation: orbit-spin-a 46s linear infinite; }
+  .reel-orbit.orbit-b { animation: orbit-spin-b 64s linear infinite; }
+  @keyframes orbit-spin-a { from { transform: rotate(-31deg); } to { transform: rotate(329deg); } }
+  @keyframes orbit-spin-b { from { transform: rotate(45deg); } to { transform: rotate(-315deg); } }
+
+  /* --- Inti showreel "bernapas" --- */
+  .reel-core { animation: core-breathe 7s ease-in-out infinite; }
+  @keyframes core-breathe {
+    0%, 100% { transform: rotate(-7deg) scale(1); }
+    50% { transform: rotate(-7deg) scale(1.035); }
+  }
+
+  /* --- Sapuan cahaya berkala melintasi showreel --- */
+  .showreel-art::after {
+    content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none;
+    background: linear-gradient(115deg, transparent 42%, rgba(243, 242, 235, .10) 50%, transparent 58%);
+    transform: translateX(-130%);
+    animation: sheen-sweep 9s ease-in-out infinite;
+  }
+  @keyframes sheen-sweep {
+    0%, 58% { transform: translateX(-130%); }
+    88%, 100% { transform: translateX(130%); }
+  }
+
+  /* --- Spotlight mengikuti mouse di kartu video (JS mengisi --mx/--my) --- */
+  .project-card { position: relative; }
+  .project-card::before {
+    content: ""; position: absolute; inset: 0; z-index: 5; pointer-events: none; opacity: 0;
+    background: radial-gradient(440px circle at var(--mx, 50%) var(--my, 50%), rgba(205, 243, 107, .12), transparent 65%);
+    transition: opacity 400ms ease;
+  }
+  .project-card:hover::before { opacity: 1; }
+  .project-card:hover { border-color: rgba(205, 243, 107, .35); }
+
+  /* --- Marquee raksasa outlined di belakang section karya --- */
+  .work-section { overflow: clip; }
+  .work-section::after {
+    content: "SHOWREEL · SHOWREEL · SHOWREEL · SHOWREEL · ";
+    position: absolute; top: 48px; left: 0; z-index: -1; pointer-events: none;
+    font-size: clamp(4rem, 9vw, 8.5rem); font-weight: 800; letter-spacing: -.05em; line-height: 1;
+    white-space: nowrap; color: transparent; -webkit-text-stroke: 1px rgba(243, 242, 235, .08);
+    animation: bg-marquee 36s linear infinite;
+  }
+  @keyframes bg-marquee { to { transform: translateX(-50%); } }
+}
+
+/* Reduced motion: grain jadi statis nyaris tak terlihat; sisanya
+   sudah dijinakkan aturan global (durasi .01ms, 1 iterasi). */
+@media (prefers-reduced-motion: reduce) {
+  body::after { animation: none; opacity: .03; }
 }
